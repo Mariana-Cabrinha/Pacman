@@ -6,6 +6,10 @@ from pac import Pac
 from cell import Cell
 from berry import Berry
 from ghost import Ghost
+from blinky import Blinky
+from pinky import Pinky
+from inky import Inky
+from clyde import Clyde
 from display import Display
 
 class World:
@@ -40,14 +44,16 @@ class World:
 					self.berries.add(Berry(x_index, y_index, CHAR_SIZE // 2, is_power_up=True))
 
 				# for Ghosts's starting position
-				elif char == "s":
-					self.ghosts.add(Ghost(x_index, y_index, "skyblue"))
-				elif char == "p": 
-					self.ghosts.add(Ghost(x_index, y_index, "pink"))
-				elif char == "o":
-					self.ghosts.add(Ghost(x_index, y_index, "orange"))
-				elif char == "r":
-					self.ghosts.add(Ghost(x_index, y_index, "red"))
+
+				elif char == "b":
+					blinky = Blinky(x_index, y_index, "red")
+					self.ghosts.add(blinky)
+				elif char == "p":
+					self.ghosts.add(Pinky(x_index, y_index, "pink"))
+				elif char == "i":
+					self.ghosts.add(Inky(x_index, y_index, "skyblue", blinky))
+				elif char == "c":
+					self.ghosts.add(Clyde(x_index, y_index, "orange"))
 
 				elif char == "P":	# for PacMan's starting position 
 					self.player.add(Pac(x_index, y_index))
@@ -104,7 +110,6 @@ class World:
 			self.player.sprite.status = "idle"
 			self.generate_new_level()
 
-
 	def update(self):
 		if not self.game_over:
 			# player movement
@@ -121,7 +126,7 @@ class World:
 			for berry in self.berries.sprites():
 				if self.player.sprite.rect.colliderect(berry.rect):
 					if berry.power_up:
-						self.player.sprite.immune_time = 150 # Timer based from FPS count
+						self.player.sprite.immune_time = 150  # Timer based from FPS count
 						self.player.sprite.pac_score += 50
 					else:
 						self.player.sprite.pac_score += 10
@@ -144,7 +149,7 @@ class World:
 		# rendering
 		[wall.update(self.screen) for wall in self.walls.sprites()]
 		[berry.update(self.screen) for berry in self.berries.sprites()]
-		[ghost.update(self.walls_collide_list) for ghost in self.ghosts.sprites()]
+		[ghost.update(self.walls_collide_list, self.player.sprite.rect) for ghost in self.ghosts.sprites()]
 		self.ghosts.draw(self.screen)
 
 		self.player.update()
@@ -158,7 +163,7 @@ class World:
 			[ghost.move_to_start_pos() for ghost in self.ghosts.sprites()]
 			self.player.sprite.move_to_start_pos()
 			self.player.sprite.status = "idle"
-			self.player.sprite.direction = (0,0)
+			self.player.sprite.direction = (0, 0)
 			self.reset_pos = False
 
 		# for restart button
