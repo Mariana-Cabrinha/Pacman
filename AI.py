@@ -1,47 +1,58 @@
 import heapq
+import time
 
-def manhattan_distance(p1, p2):
-    return abs(p1[0] - p2[0]) + abs(p1[1] - p2[1])
+DIRECTIONS = {
+    "UP": (0, -1),
+    "DOWN": (0, 1),
+    "LEFT": (-1, 0),
+    "RIGHT": (1, 0)
+}
 
-def a_star(start, goal, walls_collide_list, directions):
-    # Implementação do algoritmo A* para encontrar o caminho do fantasma até o pacman
-    open_list = []
-    closed_list = set()
+MAX_CALCULATION_TIME = 0.1  # Limite de tempo para cálculo do A*
+
+def manhattan_distance(start, goal):
+    return abs(start[0] - goal[0]) + abs(start[1] - goal[1])
+
+def a_star(start, goal, walls_collide_list, ):
+    start_time = time.time()
+    open_set = []
+    heapq.heappush(open_set, (0, start))
     came_from = {}
-
-    # Iniciar o open list com a posição inicial
-    heapq.heappush(open_list, (0 + manhattan_distance(start, goal), 0, start))  # (f, g, position)
     g_score = {start: 0}
+    f_score = {start: manhattan_distance(start, goal)}
+    walls_set = set(walls_collide_list)
 
-    while open_list:
-        _, current_g, current = heapq.heappop(open_list)
-
+    while open_set and time.time() - start_time < MAX_CALCULATION_TIME:
+        current = heapq.heappop(open_set)[1]
         if current == goal:
-            # Reconstruir o caminho
-            path = []
-            while current in came_from:
-                current = came_from[current]
-                path.append(current)
-            path.reverse()
-            return path
+            return reconstruct_path(came_from, current)
 
-        closed_list.add(current)
+        for move in DIRECTIONS.values():
+            neighbor = (current[0] + move[0], current[1] + move[1])
 
-        # Explorar os vizinhos
-        for direction in directions.values():
-            neighbor = (current[0] + direction[0], current[1] + direction[1])
-
-            # Ignorar se o vizinho for uma parede ou já foi visitado
-            if neighbor in closed_list or not is_valid_move(neighbor, walls_collide_list):
+            if neighbor in walls_set or neighbor[0] < 0 or neighbor[1] < 0:
                 continue
 
-            tentative_g_score = current_g + 1  # O custo é 1 para cada movimento
-
-            if neighbor not in g_score or tentative_g_score < g_score[neighbor]:
+            tentative_g_score = g_score[current] + 1
+            if tentative_g_score < g_score.get(neighbor, float('inf')):
                 came_from[neighbor] = current
                 g_score[neighbor] = tentative_g_score
-                heapq.heappush(open_list, (
-                    tentative_g_score + manhattan_distance(neighbor, goal), tentative_g_score, neighbor))
+                f_score[neighbor] = tentative_g_score + manhattan_distance(neighbor, goal)
+                heapq.heappush(open_set, (f_score[neighbor], neighbor))
+
+    return []  # Retorna uma lista vazia se nenhum caminho for encontrado
+
+def is_collide_with_wall(self, position, walls_collide_list):
+    test_rect = self.rect.copy()
+    test_rect.topleft = (position[0] * self.rect.width, position[1] * self.rect.height)
+    return any(test_rect.colliderect(wall) for wall in walls_collide_list)
+
+def reconstruct_path(came_from, current):
+    path = []
+    while current in came_from:
+        path.append(current)
+        current = came_from[current]
+    return path[::-1]  # Inverte o caminho para que ele comece do início
 
 def is_valid_move(position, walls_collide_list):
     # Verifique se a posição não colide com as paredes
