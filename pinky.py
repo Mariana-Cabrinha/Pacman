@@ -1,6 +1,7 @@
+import settings
 from ghost import Ghost
 import math
-from settings import WIDTH, HEIGHT, CHAR_SIZE
+from settings import CHAR_SIZE
 
 class Pinky(Ghost):
     def __init__(self, row, col, color='pink'):
@@ -35,8 +36,8 @@ class Pinky(Ghost):
         target_x = pacman_rect.centerx + offset_x
         target_y = pacman_rect.centery + offset_y
 
-        target_x = max(CHAR_SIZE, min(target_x, WIDTH - CHAR_SIZE))
-        target_y = max(CHAR_SIZE, min(target_y, HEIGHT - CHAR_SIZE))
+        target_x = max(CHAR_SIZE, min(target_x, settings.WIDTH - CHAR_SIZE))
+        target_y = max(CHAR_SIZE, min(target_y, settings.HEIGHT - CHAR_SIZE))
 
         return target_x, target_y
 
@@ -107,8 +108,8 @@ class Pinky(Ghost):
 
         # Teleporting to the other side of the map
         if self.rect.right <= 0:
-            self.rect.x = WIDTH
-        elif self.rect.left >= WIDTH:
+            self.rect.x = settings.WIDTH
+        elif self.rect.left >= settings.WIDTH:
             self.rect.x = 0
 
         self._animate()
