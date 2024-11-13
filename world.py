@@ -51,7 +51,7 @@ class World:
 				elif char == "p":
 					self.ghosts.add(Pinky(x_index, y_index, "pink"))
 				elif char == "i":
-					self.ghosts.add(Inky(x_index, y_index, "skyblue", blinky))
+					self.ghosts.add(Inky(x_index, y_index, "skyblue"))
 				elif char == "c":
 					self.ghosts.add(Clyde(x_index, y_index, "orange"))
 
