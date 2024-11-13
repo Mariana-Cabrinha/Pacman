@@ -6,6 +6,7 @@ from settings import NAV_HEIGHT, CHAR_SIZE, MAPS
 from pac import Pac
 from cell import Cell
 from berry import Berry
+from ghost import Ghost
 from blinky import Blinky
 from pinky import Pinky
 from inky import Inky

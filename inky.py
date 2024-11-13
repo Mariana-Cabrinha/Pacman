@@ -10,8 +10,8 @@ class Inky(Blinky):
         self.p = False
 
     def update(self, walls_collide_list, pacman_rect):
-        inky_pos = (self.rect.x // self.rect.width, self.rect.y // self.rect.height)  
-        pacman_pos = (pacman_rect.x // pacman_rect.width, pacman_rect.y // pacman_rect.height)  
+        inky_pos = (self.rect.x // self.rect.width, self.rect.y // self.rect.height)
+        pacman_pos = (pacman_rect.x // pacman_rect.width, pacman_rect.y // pacman_rect.height)
         walls_positions = [(wall.left // self.rect.width, wall.top // self.rect.height) for wall in walls_collide_list]
 
         # Verifica se o intervalo de tempo passou (2 segundos)
@@ -20,22 +20,22 @@ class Inky(Blinky):
             self.last_random_time = time.time()
 
             # Determina aleatoriamente o comportamento de Inky
-            if random.random() < 0.5:  
+            if random.random() < 0.5:
                 # Inky vai atrás do PacMan
                 new_target = pacman_pos
             else:
                 # Inky vai para uma casa próxima ao PacMan
                 # Definindo as 4 posições adjacentes possíveis
                 adjacent_positions = [
-                    (pacman_pos[0] + 4, pacman_pos[1]),  
-                    (pacman_pos[0] - 4, pacman_pos[1]),  
-                    (pacman_pos[0], pacman_pos[1] + 4),  
-                    (pacman_pos[0], pacman_pos[1] - 4)   
+                    (pacman_pos[0] + 4, pacman_pos[1]),
+                    (pacman_pos[0] - 4, pacman_pos[1]),
+                    (pacman_pos[0], pacman_pos[1] + 4),
+                    (pacman_pos[0], pacman_pos[1] - 4)
                 ]
-                
-                # Filtra as posições válidas 
+
+                # Filtra as posições válidas
                 valid_positions = [pos for pos in adjacent_positions if pos not in walls_positions]
-                
+
                 if valid_positions:
                     # Calcula a distância para cada posição válida
                     distances = [manhattan_distance(pacman_pos, pos) for pos in valid_positions]

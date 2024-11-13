@@ -1,5 +1,5 @@
 import math, pygame, settings
-from settings import WIDTH, CHAR_SIZE, GHOST_SPEED
+from settings import CHAR_SIZE, GHOST_SPEED
 
 class Ghost(pygame.sprite.Sprite):
     def __init__(self, row, col, color):

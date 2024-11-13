@@ -1,6 +1,4 @@
-import math
-
-import settings
+import math, settings
 from AI import a_star
 from ghost import Ghost
 
