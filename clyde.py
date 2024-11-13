@@ -1,10 +1,11 @@
-from AI import a_star, is_collide_with_wall
-from ghost import Ghost
-from settings import WIDTH, HEIGHT
 import math
 
+import settings
+from AI import a_star
+from ghost import Ghost
+
 class Clyde(Ghost):
-    SPEED = 2
+    SPEED = 4
     SCARED_DISTANCE = 8  # Distância em células que faz o Clyde fugir
 
     def __init__(self, row, col, color='orange'):
@@ -12,7 +13,7 @@ class Clyde(Ghost):
         self.path = []
         self.current_target = None
         # Define o canto inferior esquerdo como ponto de fuga
-        self.scatter_corner = (1, HEIGHT // self.rect.height - 2)
+        self.scatter_corner = (1, settings.HEIGHT // self.rect.height - 2)
 
     def update(self, walls_collide_list, pacman_rect):
         clyde_pos = (self.rect.x // self.rect.width, self.rect.y // self.rect.height)
@@ -40,13 +41,11 @@ class Clyde(Ghost):
                 self.current_target = self.path[0] if self.path else None
             if self.current_target is not None:
                 self.move_to_next_position(self.current_target, walls_collide_list)
-        else:
-            print("Nenhum caminho encontrado ou o caminho está vazio")
 
         # Verifica se o Clyde saiu dos limites da tela e ajusta a posição
         if self.rect.right <= 0:
-            self.rect.x = WIDTH
-        elif self.rect.left >= WIDTH:
+            self.rect.x = settings.WIDTH
+        elif self.rect.left >= settings.WIDTH:
             self.rect.x = 0
 
         self._animate()
@@ -75,7 +74,6 @@ class Clyde(Ghost):
         if not any(next_rect.colliderect(wall) for wall in walls_collide_list):
             self.rect = next_rect
         else:
-            print(f"Colisão detectada na posição: {next_rect}, direção: {self.direction}")
             self.path = []
             self.current_target = None
 

@@ -1,9 +1,6 @@
-import time
-from ghost import Ghost
-from blinky import Blinky
-import random
-from settings import WIDTH
+import random, settings, time
 from AI import a_star, manhattan_distance
+from blinky import Blinky
 
 class Inky(Blinky):
     def __init__(self, row, col, color='blue'):
@@ -39,7 +36,6 @@ class Inky(Blinky):
                 # Filtra as posições válidas 
                 valid_positions = [pos for pos in adjacent_positions if pos not in walls_positions]
                 
-                
                 if valid_positions:
                     # Calcula a distância para cada posição válida
                     distances = [manhattan_distance(pacman_pos, pos) for pos in valid_positions]
@@ -59,13 +55,10 @@ class Inky(Blinky):
                 self.current_target = self.path[0] if self.path else None
             if self.current_target is not None:
                 self.move_to_next_position(self.current_target, walls_collide_list)
-        else:
-            print("Nenhum caminho encontrado ou o caminho está vazio")
 
         if self.rect.right <= 0:
-            self.rect.x = WIDTH
-        elif self.rect.left >= WIDTH:
+            self.rect.x = settings.WIDTH
+        elif self.rect.left >= settings.WIDTH:
             self.rect.x = 0
 
         self._animate()
-

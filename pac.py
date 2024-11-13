@@ -47,18 +47,15 @@ class Pac(pygame.sprite.Sprite):
 			full_path = character_path + animation
 			self.animations[animation] = import_sprite(full_path)
 
-
 	def _is_collide(self, x, y):
 		tmp_rect = self.rect.move(x, y)
 		if tmp_rect.collidelist(self.walls_collide_list) == -1:
 			return False
 		return True
 
-
 	def move_to_start_pos(self):
 		self.rect.x = self.abs_x
 		self.rect.y = self.abs_y
-
 
 	# update with sprite/sheets
 	def animate(self, pressed_key, walls_collide_list):
@@ -77,13 +74,12 @@ class Pac(pygame.sprite.Sprite):
 				self.direction = self.directions[key]
 				self.status = key if not self.immune else "power_up"
 				break
-		
+
 		if not self._is_collide(*self.direction):
 			self.rect.move_ip(self.direction)
 			self.status = self.status if not self.immune else "power_up"
 		if self._is_collide(*self.direction):
 			self.status = "idle" if not self.immune else "power_up"
-
 
 	def update(self):
 		# Timer based from FPS count

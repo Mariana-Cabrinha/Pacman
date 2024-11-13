@@ -1,9 +1,9 @@
-from AI import a_star, is_collide_with_wall
+import settings
+from AI import a_star
 from ghost import Ghost
-from settings import WIDTH
 
 class Blinky(Ghost):
-    SPEED = 2  # Velocidade para Blinky
+    SPEED = 4  # Velocidade para Blinky
 
     def __init__(self, row, col, color='red'):
         super().__init__(row, col, color)
@@ -27,13 +27,11 @@ class Blinky(Ghost):
                 self.current_target = self.path[0] if self.path else None
             if self.current_target is not None:
                 self.move_to_next_position(self.current_target, walls_collide_list)
-        else:
-            print("Nenhum caminho encontrado ou o caminho está vazio")
 
         # Verifica se o Blinky saiu dos limites da tela e ajusta a posição
         if self.rect.right <= 0:
-            self.rect.x = WIDTH
-        elif self.rect.left >= WIDTH:
+            self.rect.x = settings.WIDTH
+        elif self.rect.left >= settings.WIDTH:
             self.rect.x = 0
 
         self._animate()
@@ -62,7 +60,6 @@ class Blinky(Ghost):
         if not any(next_rect.colliderect(wall) for wall in walls_collide_list):
             self.rect = next_rect
         else:
-            print(f"Colisão detectada na posição: {next_rect}, direção: {self.direction}")
             self.path = []  # Limpa o caminho em caso de colisão
             self.current_target = None  # Limpa o alvo em caso de colisão
 
