@@ -1,9 +1,6 @@
-import time
-from ghost import Ghost
-from blinky import Blinky
-import random
-from settings import WIDTH
+import random, settings, time
 from AI import a_star, manhattan_distance
+from blinky import Blinky
 
 class Inky(Blinky):
     def __init__(self, row, col, color='blue'):
@@ -13,8 +10,8 @@ class Inky(Blinky):
         self.p = False
 
     def update(self, walls_collide_list, pacman_rect):
-        inky_pos = (self.rect.x // self.rect.width, self.rect.y // self.rect.height)  
-        pacman_pos = (pacman_rect.x // pacman_rect.width, pacman_rect.y // pacman_rect.height)  
+        inky_pos = (self.rect.x // self.rect.width, self.rect.y // self.rect.height)
+        pacman_pos = (pacman_rect.x // pacman_rect.width, pacman_rect.y // pacman_rect.height)
         walls_positions = [(wall.left // self.rect.width, wall.top // self.rect.height) for wall in walls_collide_list]
 
         # Verifica se o intervalo de tempo passou (2 segundos)
@@ -23,23 +20,22 @@ class Inky(Blinky):
             self.last_random_time = time.time()
 
             # Determina aleatoriamente o comportamento de Inky
-            if random.random() < 0.5:  
+            if random.random() < 0.5:
                 # Inky vai atrás do PacMan
                 new_target = pacman_pos
             else:
                 # Inky vai para uma casa próxima ao PacMan
                 # Definindo as 4 posições adjacentes possíveis
                 adjacent_positions = [
-                    (pacman_pos[0] + 4, pacman_pos[1]),  
-                    (pacman_pos[0] - 4, pacman_pos[1]),  
-                    (pacman_pos[0], pacman_pos[1] + 4),  
-                    (pacman_pos[0], pacman_pos[1] - 4)   
+                    (pacman_pos[0] + 4, pacman_pos[1]),
+                    (pacman_pos[0] - 4, pacman_pos[1]),
+                    (pacman_pos[0], pacman_pos[1] + 4),
+                    (pacman_pos[0], pacman_pos[1] - 4)
                 ]
-                
-                # Filtra as posições válidas 
+
+                # Filtra as posições válidas
                 valid_positions = [pos for pos in adjacent_positions if pos not in walls_positions]
-                
-                
+
                 if valid_positions:
                     # Calcula a distância para cada posição válida
                     distances = [manhattan_distance(pacman_pos, pos) for pos in valid_positions]
@@ -59,13 +55,10 @@ class Inky(Blinky):
                 self.current_target = self.path[0] if self.path else None
             if self.current_target is not None:
                 self.move_to_next_position(self.current_target, walls_collide_list)
-        else:
-            print("Nenhum caminho encontrado ou o caminho está vazio")
 
         if self.rect.right <= 0:
-            self.rect.x = WIDTH
-        elif self.rect.left >= WIDTH:
+            self.rect.x = settings.WIDTH
+        elif self.rect.left >= settings.WIDTH:
             self.rect.x = 0
 
         self._animate()
-

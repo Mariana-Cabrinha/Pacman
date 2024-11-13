@@ -1,8 +1,5 @@
-import pygame
-import random
-import time
-import math
-from settings import WIDTH, CHAR_SIZE, GHOST_SPEED
+import math, pygame, settings
+from settings import CHAR_SIZE, GHOST_SPEED
 
 class Ghost(pygame.sprite.Sprite):
     def __init__(self, row, col, color):
@@ -87,19 +84,19 @@ class PinkGhost(Ghost):
         target_y = pacman_rect.centery + offset_y
 
         # Garante que o alvo está dentro dos limites da tela
-        target_x = max(0, min(target_x, WIDTH - CHAR_SIZE))
-        target_y = max(0, min(target_y, WIDTH - CHAR_SIZE))
+        target_x = max(0, min(target_x, settings.WIDTH - CHAR_SIZE))
+        target_y = max(0, min(target_y, settings.WIDTH - CHAR_SIZE))
 
         return target_x, target_y
 
     def euclidean_distance(self, pos1, pos2):
-        """Calcula a distância Euclidiana entre duas posições"""
+        # Calcula a distância Euclidiana entre duas posições
         x1, y1 = pos1
         x2, y2 = pos2
         return math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
 
     def get_best_move(self, walls_collide_list, current_pos, target_pos):
-        """Implementa a busca gulosa para encontrar o melhor movimento"""
+        # Implementa a busca gulosa para encontrar o melhor movimento
         possible_moves = [
             ('left', (-self.move_speed, 0)),
             ('right', (self.move_speed, 0)),
@@ -123,7 +120,7 @@ class PinkGhost(Ghost):
         return best_move
 
     def update(self, walls_collide_list, pacman_rect, pacman_direction):
-        """Atualiza a posição do fantasma usando busca gulosa"""
+        # Atualiza a posição do fantasma usando busca gulosa
         current_pos = (self.rect.centerx, self.rect.centery)
         target_pos = self.calculate_target_position(pacman_rect, pacman_direction)
 
